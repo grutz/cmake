@@ -17,6 +17,12 @@
 #  KAFKA_CPP_LIBRARIES          The Kafka libraries
 #  KAFKA_CPP_INCLUDE_DIRS       The location of Kafka headers
 
+if(CMAKE_HOST_UNIX)
+    # UNIX requires the .a library for librdkafka++
+    set(ORIG_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES})
+    SET(CMAKE_FIND_LIBRARY_SUFFIXES ".a" ".so")
+endif()
+
 find_path(KAFKA_CPP_INCLUDE_DIR 
     NAMES
         rdkafkacpp.h
@@ -46,14 +52,18 @@ find_package_handle_standard_args(KAFKA_CPP
 mark_as_advanced(KAFKA_CPP_INCLUDE_DIR KAFKA_CPP_LIBRARY)
 
 if (KAFKA_CPP_FOUND)
-    set(KAFKA_CPP_INCLUDE_DIRS ${KAFKA_CPP_INCLUDE_DIR})
-    set(KAFKA_CPP_LIBRARIES ${KAFKA_CPP_LIBRARY})
-	
     get_filename_component (KAFKA_CPP_LIBRARY_DIR ${KAFKA_CPP_LIBRARY} PATH)
     get_filename_component (KAFKA_CPP_LIBRARY_NAME ${KAFKA_CPP_LIBRARY} NAME_WE)
-    
+
+    set(KAFKA_CPP_INCLUDE_DIRS ${KAFKA_CPP_INCLUDE_DIR})
+    set(KAFKA_CPP_LIBRARIES ${KAFKA_CPP_LIBRARY})
+
     mark_as_advanced (KAFKA_CPP_LIBRARY_DIR KAFKA_CPP_LIBRARY_NAME)
-    
-    message (STATUS "Include directories: ${KAFKA_CPP_INCLUDE_DIRS}") 
-    message (STATUS "Libraries: ${KAFKA_CPP_LIBRARIES}") 
 endif ()
+
+if(CMAKE_HOST_UNIX)
+    # Reset the library paths to original
+    set(CMAKE_FIND_LIBRARY_SUFFIXES ${ORIG_LIBRARY_SUFFIXES})
+endif()
+
+

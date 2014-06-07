@@ -59,7 +59,4 @@ if (KAFKA_C_FOUND)
     get_filename_component (KAFKA_C_LIBRARY_NAME ${KAFKA_C_LIBRARY} NAME_WE)
     
     mark_as_advanced (KAFKA_C_LIBRARY_DIR KAFKA_C_LIBRARY_NAME)
-    
-    message (STATUS "Include directories: ${KAFKA_C_INCLUDE_DIRS}") 
-    message (STATUS "Libraries: ${KAFKA_C_LIBRARIES}") 
 endif ()
